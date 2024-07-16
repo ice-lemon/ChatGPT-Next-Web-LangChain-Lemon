@@ -205,19 +205,33 @@ export class AgentApi {
     }
     return apiKey;
   }
-
-  async getOpenAIBaseUrl(reqBaseUrl: string | undefined) {
+  async getOpenAIBaseUrl(reqBody: RequestBody) {
+    const reqBaseUrl = reqBody.baseUrl;
     const serverConfig = getServerSideConfig();
     let baseUrl = "https://api.openai.com/v1";
-    if (serverConfig.baseUrl) baseUrl = serverConfig.baseUrl;
-    if (reqBaseUrl?.startsWith("http://") || reqBaseUrl?.startsWith("https://"))
+  
+    // 如果 serverConfig.baseUrl 存在，则使用 serverConfig.baseUrl
+    if (serverConfig.baseUrl) {
+      baseUrl = serverConfig.baseUrl;
+    }
+  
+    // 如果 reqBody.baseUrl 是一个有效的 URL，则使用 reqBody.baseUrl
+    if (reqBaseUrl?.startsWith("http://") || reqBaseUrl?.startsWith("https://")) {
       baseUrl = reqBaseUrl;
-    if (!baseUrl.endsWith("/v1"))
+    }
+  
+    // 如果 isAzure 为 false 且 baseUrl 不以 /v1 结尾，则确保 baseUrl 以 /v1 结尾
+    if (!reqBody.isAzure && !baseUrl.endsWith("/v1")) {
       baseUrl = baseUrl.endsWith("/") ? `${baseUrl}v1` : `${baseUrl}/v1`;
-    console.log("[baseUrl]", baseUrl);
+    }
+  
+    // 如果 reqBody.isAzure 为 false 且 serverConfig.isAzure 为 true，则使用 serverConfig.azureUrl 作为 baseUrl
+    if (!reqBody.isAzure && serverConfig.isAzure) {
+      baseUrl = serverConfig.azureUrl || baseUrl;
+    }
+    console.log("[baseUrl-系统默认]", baseUrl);
     return baseUrl;
   }
-
   async getApiHandler(
     req: NextRequest,
     reqBody: RequestBody,
@@ -250,7 +264,7 @@ export class AgentApi {
       if (!reqBody.isAzure && serverConfig.isAzure) {
         baseUrl = serverConfig.azureUrl || baseUrl;
       }
-      console.log("[baseUrl]", baseUrl);
+      console.log("[baseUrl - 当前选择]", baseUrl);
 
       var handler = await this.getHandler(reqBody);
 

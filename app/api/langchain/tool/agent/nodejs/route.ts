@@ -30,7 +30,7 @@ async function handle(req: NextRequest) {
     const token = authToken.trim().replaceAll("Bearer ", "").trim();
 
     const apiKey = await agentApi.getOpenAIApiKey(token);
-    const baseUrl = await agentApi.getOpenAIBaseUrl(reqBody.baseUrl);
+    const baseUrl = await agentApi.getOpenAIBaseUrl(reqBody);
 
     const model = new OpenAI(
       {

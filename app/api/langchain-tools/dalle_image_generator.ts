@@ -62,70 +62,80 @@ export class DallEAPIWrapper extends StructuredTool {
   });
 
   /** @ignore */
-  async _call({ prompt, size, quality, style }: z.infer<typeof this.schema>) {
-    let imageUrl;
-    const apiUrl = `${this.baseURL}/images/generations`;
-    try {
-      let requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${this.apiKey}`,
-        },
-        body: JSON.stringify({
-          model: this.model,
-          prompt: prompt,
-          n: this.n,
-          size: size,
-          quality: quality,
-          style: style,
-        }),
-      };
-      if (this.model != "dall-e-3") {
-        requestOptions = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${this.apiKey}`,
-          },
-          body: JSON.stringify({
-            model: this.model,
-            prompt: prompt,
-            n: this.n,
-            size: size,
-          }),
-        };
-      }
-      console.log(requestOptions);
-      const response = await fetch(apiUrl, requestOptions);
-      const json = await response.json();
-      try {
-        console.log("[DALL-E]", json);
-        imageUrl = json.data[0].url;
-      } catch (e) {
-        if (this.callback != null) await this.callback(JSON.stringify(json));
-        throw e;
-      }
-    } catch (e) {
-      console.error("[DALL-E]", e);
-      return (e as Error).message;
-    }
-    if (!imageUrl) return "No image was generated";
-    try {
-      let filePath = imageUrl;
-      if (!this.noStorage) {
-        filePath = await this.saveImageFromUrl(imageUrl);
-      }
-      console.log("[DALL-E]", filePath);
-      var imageMarkdown = `![img](${filePath})`;
-      if (this.callback != null) await this.callback(imageMarkdown);
-      return "Generated success";
-    } catch (e) {
-      if (this.callback != null)
-        await this.callback("Image upload to OSS failed");
-      return "Image upload to OSS failed";
-    }
+async _call({ prompt, size, quality, style }: z.infer<typeof this.schema>) {
+  let imageUrl;
+  const baseURL = this.baseURL ?? ""; // 如果 this.baseURL 为 undefined，则使用空字符串
+  let apiUrl = `${baseURL}/images/generations`;
+  const isAzure = baseURL.includes("azure.com");
+
+  if (isAzure) {
+    apiUrl = `${baseURL}/dall-e-3/images/generations?api-version=2024-02-01`;
   }
 
+  try {
+    let headers: { [key: string]: string } = {
+      "Content-Type": "application/json",
+    };
+
+    if (isAzure) {
+      headers["api-key"] = this.apiKey;
+    } else {
+      headers["Authorization"] = `Bearer ${this.apiKey}`;
+    }
+
+    let requestOptions = {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        model: this.model,
+        prompt: prompt,
+        n: this.n,
+        size: size,
+        quality: quality,
+        style: style,
+      }),
+    };
+
+    if (!isAzure && this.model != "dall-e-3") {
+      requestOptions.body = JSON.stringify({
+        model: this.model,
+        prompt: prompt,
+        n: this.n,
+        size: size,
+      });
+    }
+
+    console.log(requestOptions);
+    const response = await fetch(apiUrl, requestOptions);
+    const json = await response.json();
+    try {
+      console.log("[DALL-E]", json);
+      imageUrl = json.data[0].url;
+    } catch (e) {
+      if (this.callback != null) await this.callback(JSON.stringify(json));
+      throw e;
+    }
+  } catch (e) {
+    console.error("[DALL-E]", e);
+    return (e as Error).message;
+  }
+
+  if (!imageUrl) return "No image was generated";
+
+  try {
+    let filePath = imageUrl;
+    if (!this.noStorage) {
+      filePath = await this.saveImageFromUrl(imageUrl);
+    }
+    console.log("[DALL-E]", filePath);
+    var imageMarkdown = `![img](${filePath})`;
+    if (this.callback != null) await this.callback(imageMarkdown);
+    return "Generated success";
+  } catch (e) {
+    if (this.callback != null)
+      await this.callback("Image upload to OSS failed");
+    return "Image upload to OSS failed";
+  }
+}
   description = `openai's dall-e image generator.`;
 }

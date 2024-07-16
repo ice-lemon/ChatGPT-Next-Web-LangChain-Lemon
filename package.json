@@ -22,7 +22,7 @@
     "@fortaine/fetch-event-source": "^3.0.6",
     "@hello-pangea/dnd": "^16.5.0",
     "@langchain/cohere": "^0.0.7",
-    "@langchain/community": "0.0.57",
+    "@langchain/community": "^0.0.57",
     "@langchain/pinecone": "^0.0.4",
     "@next/third-parties": "^14.1.0",
     "@pinecone-database/pinecone": "^2.2.0",
