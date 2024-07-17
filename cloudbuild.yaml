@@ -1,0 +1,20 @@
+steps:
+  - name: 'gcr.io/cloud-builders/yarn'
+    args: ['install']
+  - name: 'gcr.io/cloud-builders/yarn'
+    args: ['run', 'build']
+  - name: 'gcr.io/cloud-builders/yarn'
+    args: ['run', 'export']
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud run deploy nextchat \
+          --image=gcr.io/aixtb-chat/nextchat \
+          --platform=managed \
+          --region=asia-east1 \
+          --allow-unauthenticated
+
+images:
+  - 'gcr.io/aixtb-chat/nextchat'
