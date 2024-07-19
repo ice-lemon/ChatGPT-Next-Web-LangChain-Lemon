@@ -1,7 +1,12 @@
 <div align="center">
-<img src="./docs/images/head-cover.png" alt="icon"/>
+
+<a href='#企业版'>
+  <img src="./docs/images/ent.svg" alt="icon"/>
+</a>
 
 <h1 align="center">ChatGPT Next Web LangChain</h1>
+
+One-Click to get a well-designed cross-platform ChatGPT web UI, with GPT3, GPT4 & Gemini Pro support.
 
 一键免费部署你的跨平台私人 ChatGPT 应用, 支持 GPT3, GPT4 & Gemini Pro 模型。（基于 LangChain 实现插件功能）
 
@@ -21,6 +26,34 @@
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Hk-Gosuto/ChatGPT-Next-Web-LangChain)
 
 </div>
+
+## Enterprise Edition
+
+Meeting Your Company's Privatization and Customization Deployment Requirements:
+- **Brand Customization**: Tailored VI/UI to seamlessly align with your corporate brand image.
+- **Resource Integration**: Unified configuration and management of dozens of AI resources by company administrators, ready for use by team members.
+- **Permission Control**: Clearly defined member permissions, resource permissions, and knowledge base permissions, all controlled via a corporate-grade Admin Panel.
+- **Knowledge Integration**: Combining your internal knowledge base with AI capabilities, making it more relevant to your company's specific business needs compared to general AI.
+- **Security Auditing**: Automatically intercept sensitive inquiries and trace all historical conversation records, ensuring AI adherence to corporate information security standards.
+- **Private Deployment**: Enterprise-level private deployment supporting various mainstream private cloud solutions, ensuring data security and privacy protection.
+- **Continuous Updates**: Ongoing updates and upgrades in cutting-edge capabilities like multimodal AI, ensuring consistent innovation and advancement.
+
+For enterprise inquiries, please contact: **business@nextchat.dev**
+
+## 企业版
+
+满足企业用户私有化部署和个性化定制需求：
+- **品牌定制**：企业量身定制 VI/UI，与企业品牌形象无缝契合
+- **资源集成**：由企业管理人员统一配置和管理数十种 AI 资源，团队成员开箱即用
+- **权限管理**：成员权限、资源权限、知识库权限层级分明，企业级 Admin Panel 统一控制
+- **知识接入**：企业内部知识库与 AI 能力相结合，比通用 AI 更贴近企业自身业务需求
+- **安全审计**：自动拦截敏感提问，支持追溯全部历史对话记录，让 AI 也能遵循企业信息安全规范
+- **私有部署**：企业级私有部署，支持各类主流私有云部署，确保数据安全和隐私保护
+- **持续更新**：提供多模态、智能体等前沿能力持续更新升级服务，常用常新、持续先进
+
+企业版咨询: **business@nextchat.dev**
+
+<img width="300" src="https://github.com/user-attachments/assets/3daeb7b6-ab63-4542-9141-2e4a12c80601">
 
 > [!WARNING]
 > 本项目插件功能基于 [OpenAI API 函数调用](https://platform.openai.com/docs/guides/function-calling) 功能实现，转发 GitHub Copilot 接口或类似实现的模拟接口并不能正常调用插件功能！
@@ -280,9 +313,48 @@ anthropic claude Api version.
 
 anthropic claude Api Url.
 
+### `BAIDU_API_KEY` (optional)
+
+Baidu Api Key.
+
+### `BAIDU_SECRET_KEY` (optional)
+
+Baidu Secret Key.
+
+### `BAIDU_URL` (optional)
+
+Baidu Api Url.
+
+### `BYTEDANCE_API_KEY` (optional)
+
+ByteDance Api Key.
+
+### `BYTEDANCE_URL` (optional)
+
+ByteDance Api Url.
+
+### `ALIBABA_API_KEY` (optional)
+
+Alibaba Cloud Api Key.
+
+### `ALIBABA_URL` (optional)
+
+Alibaba Cloud Api Url.
+
 ### `DISABLE_FAST_LINK` （可选）
 
 如果你想禁用从链接解析预制设置，将此环境变量设置为 1 即可。
+
+For Azure: use `modelName@azure=deploymentName` to customize model name and deployment name.
+> Example: `+gpt-3.5-turbo@azure=gpt35` will show option `gpt35(Azure)` in model list.
+> If you only can use Azure model, `-all,+gpt-3.5-turbo@azure=gpt35` will `gpt35(Azure)` the only option in model list.
+
+For ByteDance: use `modelName@bytedance=deploymentName` to customize model name and deployment name.
+> Example: `+Doubao-lite-4k@bytedance=ep-xxxxx-xxx` will show option `Doubao-lite-4k(ByteDance)` in model list.
+
+### `DEFAULT_MODEL` （optional）
+
+Change default model
 
 ### `WHITE_WEBDEV_ENDPOINTS` (optional)
 
